@@ -24,7 +24,7 @@ public class CategoryManageDialog extends JFrame{
    private JButton DeleteB;
    private JButton AddB;
    private JButton NewB;
-   private JButton CompleteB;
+   private JButton CompleteB; 
    
    private String[] g0 = {"정보","포털", "학교"};
    
