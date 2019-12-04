@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
@@ -24,11 +25,11 @@ public class CategoryManageDialog extends JFrame{
    private JButton DeleteB;
    private JButton AddB;
    private JButton NewB;
-   private JButton CompleteB;
+   private JButton CompleteB; 
    
    private String[] g0 = {"정보","포털", "학교"};
    
-   private HashSet siteSet;
+   private int siteSet;
    private ArrayList<String> list = new ArrayList<>(siteSet);
 
    
@@ -56,7 +57,7 @@ public class CategoryManageDialog extends JFrame{
       JPanel RP = new JPanel();
       RP.setLayout(new BorderLayout());
       RP.setBorder(new TitledBorder(new LineBorder(Color.black,1),"등록항목"));
-      RL  = new JList(siteSet); ///*등록항목들 Vector listData*/
+      RL  = new JList(g0); ///*등록항목들 Vector listData*/
       RP.add(RL, BorderLayout.CENTER);
       
       JPanel zP = new JPanel();

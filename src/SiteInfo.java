@@ -2,10 +2,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -26,6 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.ws.Action;
 
 
 public class SiteInfo extends JFrame {
@@ -34,7 +38,7 @@ public class SiteInfo extends JFrame {
    //createInfo
    private JPanel putPanel, basicInfoP, addInfoP, btnP, searchP, arrayP;
    private JTextField siteTF, addrTF, idTF, passTF;
-   
+   private JPanel tablePanel = new JPanel(); // 표 패널
    private String[] group1 = {"분류","일반", "학교","정보","포털"};
    private String[] group2 = {"미지정","☆", "☆☆","☆☆☆","☆☆☆☆","☆☆☆☆☆"};
    //private String[] group3 = {"분류","일반", "학교","정보","포털"};
@@ -54,6 +58,7 @@ public class SiteInfo extends JFrame {
    private  JCheckBox check;
    private   JButton deleteB;
    
+   ArrayList<HashMap<String,String>> siteInfoList = new ArrayList<HashMap<String,String>>();
    
   // String[] columNames = {"분류 ", "선호도", "사이트 이름","사이트 주소"};
 
@@ -336,11 +341,11 @@ public class SiteInfo extends JFrame {
       
       
       //표
-      JPanel tablePanel = new JPanel(); // 표 패널
+      
       tablePanel.setLayout(new BorderLayout());
       tabPanel.add(tablePanel, BorderLayout.CENTER);
 		
-		//model = new InfoTableModel();
+	//model = new InfoTableModel();
       dtm = new DefaultTableModel();
       dtm.setColumnIdentifiers(new String[] {"분류 ", "선호도", "사이트 이름","사이트 주소"});
 		table = new JTable(dtm);
@@ -356,9 +361,9 @@ public class SiteInfo extends JFrame {
      
     check = new JCheckBox("계정정보 보기");
      JLabel idl = new JLabel("아이디");
-     idTF = new JTextField(7); //#공용
+     JTextField idTF_bottom = new JTextField(7); //#공용
      JLabel passl = new JLabel("비밀번호");
-     passTF = new JTextField(7); //# 공용
+     JTextField passTF_bottom = new JTextField(7); //# 공용
      deleteB = new JButton("삭제");
      deleteB.setEnabled(false);
      
@@ -366,9 +371,9 @@ public class SiteInfo extends JFrame {
 
      p1.add(check); 
      p1.add(idl);
-     p1.add(idTF);
+     p1.add(idTF_bottom);
      p1.add(passl);
-     p1.add(passTF);
+     p1.add(passTF_bottom);
      
      viewPanel.add(p1, BorderLayout.CENTER);
      viewPanel.add(deleteB, BorderLayout.EAST);
@@ -480,38 +485,86 @@ public class SiteInfo extends JFrame {
 		}
 		
 	};
-
+	
 	ActionListener newin = new ActionListener() {
 		@Override
 	      public void actionPerformed(ActionEvent e) {
-			 Object obj = e.getSource();
-				if ((JButton)obj == btn1) {
+			System.out.println("ASD");
+					if (e.getActionCommand().equals("새로 작성(N)")) {	
+						System.out.println("ASD");
+						
+						String siteTitle = siteTF.getText().toString();
+						String siteUrl = addrTF.getText().toString();
+						String siteKind = group1Combo.getSelectedItem().toString();
+						String siteFv = group2Combo.getSelectedItem().toString();
+						String siteId = idTF.getText().toString();
+						String sitePwd = passTF.getText().toString();
+						String[] s = {siteTitle,siteUrl,siteId,sitePwd};
+						dtm.addRow(s);
+						
+						//==== [start] 사이트 정보저장 ====
+							HashMap<String,String> mapInfo = new HashMap<String, String>();
+							
+							mapInfo.put("siteTitle", siteTitle);
+							mapInfo.put("siteUrl", siteUrl);
+							mapInfo.put("siteKind", siteKind);
+							mapInfo.put("siteFv", siteFv);
+							mapInfo.put("siteId", siteId);
+							mapInfo.put("sitePwd", sitePwd);
+							
+							siteInfoList.add(mapInfo);
+						//==== [END] 사이트 정보저장 ====
+							
+						
+						
+						
+						
+						siteTF.setText("");
+						addrTF.setText("");
+						idTF.setText("");
+						passTF.setText("");
+						
+						
+						
+						
+						
+					}
+						
+					if(e.getSource().equals(dtm)) {
+						
+						HashMap<String, String> getThisMapInfo = siteInfoList.get(1);
+
+						siteTF.setText(getThisMapInfo.get("siteTitle"));
+						addrTF.setText(getThisMapInfo.get("siteUrl"));
+						idTF.setText(getThisMapInfo.get("siteId"));
+						passTF.setText(getThisMapInfo.get("sitePwd"));
+						group1Combo.setSelectedItem(getThisMapInfo.get("siteKind"));
+						group1Combo.setSelectedItem(getThisMapInfo.get("siteFv"));
+						
+					}
+					
 					//String s[] = { siteTF.getText().toString(), addrTF.getText().toString()};
 					//dtm.addRow(s);
-					dtm.addRow(new String[]
-							{
-								siteTF.getText().toString(), addrTF.getText().toString()	
-							}
-					);
-					siteTF.setText(null);
-					addrTF.setText(null);
-					idTF.setText(null);
-					passTF.setText(null);
+//					dtm.addRow(new String[]
+//							{
+//								siteTF.getText().toString(), addrTF.getText().toString()	
+//							}
+//					);
+//					
 					
 				
-			/*if (passTF.getText().length() > 0) {
-				btn1.setEnabled(true);
-			}*/
-			
-			//dtm = new DefaultTableModel(data, 1); //???
-			//table.setModel(dtm);
-			
-			//InfoTableModel();
+					/*if (passTF.getText().length() > 0) {
+						btn1.setEnabled(true);
+					}*/
+					
+					//dtm = new DefaultTableModel(data, 1); //???
+					//table.setModel(dtm);
+					
+					//InfoTableModel();
 					
 				}
 			//data.add(dtm);
 				
-		}
 	};
 	
 	private void Changed() {
