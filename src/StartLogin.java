@@ -16,7 +16,7 @@ import javax.swing.border.TitledBorder;
 public class StartLogin extends JFrame {
    
    // 바깥 믈릭시 클릭막는 것 해야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   private SiteInfoManagerApp main;
+   private Main main;
    private SiteInfo siteInfo;
    private JButton loginB;
    private JButton exitB;
@@ -92,14 +92,14 @@ public class StartLogin extends JFrame {
    
    public void check() {
       if(passTF.getText().equals("0000")) {
-         main.showSiteInfo();
+    	  dispose();
       }
       else {
          passTF.setText("");
       }
       
    }
-   public void setMain(SiteInfoManagerApp main) {
+   public void setMain(Main main) {
       this.main = main;
    }
    
