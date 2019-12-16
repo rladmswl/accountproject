@@ -5,33 +5,37 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Vector;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 public class CategoryManageDialog extends JFrame{
    
-   private JList RL;
+   private JList list;
    private JTextField LNameTF;
    private JButton DeleteB;
    private JButton AddB;
    private JButton NewB;
-   private JButton CompleteB; 
-   
-   private String[] g0 = {"정보","포털", "학교"};
-   
-   private int siteSet;
-   private ArrayList<String> list = new ArrayList<>(siteSet);
+   private JButton CompleteB;
 
+   
+   //private String[] g0 = {"정보","포털", "학교"};
+   
+   //private HashSet siteSet;
+   //private ArrayList<String> list = new ArrayList<>(siteSet);   
+   private Vector<String> vector = new Vector<String>();
+
+   private DefaultListModel model;
+   
    
    
    public CategoryManageDialog() {
@@ -44,7 +48,7 @@ public class CategoryManageDialog extends JFrame{
       this.add(Register());
       this.add(Edit());
       
-      setSize(600,400);
+      setSize(500,300);
       //setResizable()
       setLocation(1000,500);
       setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -53,19 +57,7 @@ public class CategoryManageDialog extends JFrame{
    }
    
    
-   private JPanel Register() { //등록항목
-      JPanel RP = new JPanel();
-      RP.setLayout(new BorderLayout());
-      RP.setBorder(new TitledBorder(new LineBorder(Color.black,1),"등록항목"));
-      RL  = new JList(g0); ///*등록항목들 Vector listData*/
-      RP.add(RL, BorderLayout.CENTER);
-      
-      JPanel zP = new JPanel();
-      RP.add(zP, BorderLayout.SOUTH);
-      
-      
-      return RP;
-   }
+
    private JPanel Edit() { //편집내용
       JPanel EP0 = new JPanel();
       EP0.setLayout(new BorderLayout());
@@ -96,15 +88,74 @@ public class CategoryManageDialog extends JFrame{
       DeleteB.setMnemonic(KeyEvent.VK_D);
       AddB.setMnemonic(KeyEvent.VK_A);
       
-      DeleteB.addActionListener(new ActionListener() {
+      AddB.addActionListener(new ActionListener() {
 
          @Override
          public void actionPerformed(ActionEvent e) {
-            
-            
-         }
          
-      });
+            String s = LNameTF.getText();
+            
+            //for(int i =0; i<vector.size(); i++ ) {
+            int i =0;
+            int count = 0;
+            while(i<vector.size()) {
+               
+               String v_text = ((Vector<String>)vector).elementAt(i);
+               System.out.println(v_text);
+               if(v_text == s) {
+                  LNameTF.setText("");
+                  System.out.println("b");
+                  break;
+               }
+               else if (v_text != s){
+                  count += 1;
+                  //if(count==3) {
+               //   vector.add(s);//}
+                  LNameTF.setText("");
+               System.out.println("c");
+               //list.updateUI();
+               }
+               if(count==vector.size()) {
+                  vector.add(s);
+                  LNameTF.setText("");
+                  list.setListData(vector);
+               }
+               System.out.println("d");
+               i++;
+            }
+            
+            /* //.setListData(vector);
+            for(int i=0; i < model.getSize(); i++){ 
+               String s = (String)(model.getElementAt(i)); 
+                if(LNameTF.getText() == s) {
+                   break;
+                }
+                else
+                   model.addElement(LNameTF.getText());
+                LNameTF.setText("");
+            } 
+            
+            
+            
+            
+               Iterator it = vector.iterator();
+               while(it.hasNext()) {
+               
+                  if( (String)it.next() == LNameTF.getText()) {
+                     break; }
+                  else { 
+                     vector.addElement(LNameTF.getText());
+                     LNameTF.setText("");
+                     list.updateUI();
+                     
+                  }
+            
+               }*/
+               }
+            });
+
+            
+         
       
       p2.add(DeleteB);
       p2.add(AddB);
@@ -136,6 +187,29 @@ public class CategoryManageDialog extends JFrame{
       return EP0;
       
       
+   }
+   private JPanel Register() { //등록항목
+      JPanel RP = new JPanel();
+      JPanel zP = new JPanel();
+      
+      RP.setLayout(new BorderLayout());
+      RP.setBorder(new TitledBorder(new LineBorder(Color.black,1),"등록항목"));
+      
+      vector.addElement("정보");
+      vector.addElement("포털");
+      vector.addElement("학교");
+      list  = new JList(vector); ///*등록항목들 Vector listData*/
+      /*list = new JList(new DefaultListModel());
+      model = (DefaultListModel) list.getModel();
+      model.addElement("정보");
+      model.addElement("포털");
+      model.addElement("학교");*/
+   
+      RP.add(list, BorderLayout.CENTER);
+      RP.add(zP, BorderLayout.SOUTH);
+      
+      
+      return RP;
    }
    
    public static void main(String[] args) {

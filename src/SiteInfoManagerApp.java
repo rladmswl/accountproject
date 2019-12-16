@@ -6,11 +6,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Vector;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -59,7 +63,7 @@ public class SiteInfoManagerApp extends JFrame {
    private   JButton deleteB;
    private JLabel sitenum;
    
-   //ArrayList<HashMap<String,String>> siteInfoList = new ArrayList<HashMap<String,String>>();
+   ArrayList<HashMap<String,String>> siteInfoList = new ArrayList<HashMap<String,String>>();
    
   // String[] columNames = {"분류 ", "선호도", "사이트 이름","사이트 주소"};
 
@@ -159,7 +163,7 @@ public class SiteInfoManagerApp extends JFrame {
 		m2.add(r2);
 		
 		//설정
-		JMenuItem log = new JMenuItem("자동 로그인(L)");
+		JCheckBoxMenuItem log = new JCheckBoxMenuItem("자동 로그인(L)");
 		JMenuItem view = new JMenuItem("계정정보 보기 상태 기억하기(V)");
 		
 		log.addItemListener(autologin);
@@ -353,7 +357,7 @@ public class SiteInfoManagerApp extends JFrame {
 		table.setAutoCreateRowSorter(true); // 자동 행 정렬
 		
 		tablePanel.add(new JScrollPane(table));
-		tableRow(); // 표 행
+		//tableRow(); // 표 행
       
       //계정정보
      JPanel viewPanel = new JPanel(new BorderLayout()); // 계정정보 보기 패널
@@ -382,20 +386,51 @@ public class SiteInfoManagerApp extends JFrame {
    }
    
    // 표 행 클릭했을때
-   private void tableRow() {
+  /* private void tableRow() {
 	   table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 		   public void valueChanged(ListSelectionEvent e) {
 			   	Vector<SiteInfo> list = new Vector<SiteInfo>();
    				list.addAll(infoList.getSiteInfo());
    			
-	   			int Row = table.getSelectedRow(); // 선택 된 열 알아내기
-	   			SiteInfo s = list.get(Row);
+	   			int row = table.getSelectedRow(); // 선택 된 열 알아내기
+	   			SiteInfo s = list.get(row); //오류ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
 	   			
+	   			siteTF.setText(s.getSiteName());
+	   			addrTF.setText(s.getUrl());
+	   			idTF.setText(s.getId());
+	   			passTF.setText(s.getPw());
+			   
+			   int Row = table.getSelectedRow(); // 선택 된 열 알아내기
+			   siteTF = table.getValueAt((Row, 2));
+	   			addrTF.setText();
+	   			idTF.setText();
+	   			passTF.setText();
 	   			
+	   		 // 분류콤보
+	   			String s1 = ((SiteDetailInfo)s).getGroup();
+	   			int index1 = 0;
+	   			for ( int i1 = 0; i1<group1.length; i1++) {
+	   				if(group1[i1].equals(s1)) {
+	   					index1 = i1;
+	   				}
+	   			}
+	   			group1Combo.setSelectedIndex(index1);
+	   			
+	   		 // 선호도콤보
+	   			String s2 = ((SiteDetailInfo)s).getPrefer();
+	   			int index2 = 0;
+	   			for ( int i2 = 0; i2<group2.length; i2++) {
+	   				if(group1[i2].equals(s2)) {
+	   					index2 = i2;
+	   				}
+	   			}
+	   			group2Combo.setSelectedIndex(index2);
+	   			
+	   			textA.setText(((SiteDetailInfo)s).getMemo());
 		   }
 	   });
 	   
-   }
+   }*/
    
    // 사이트 개수 나타내기
    private JPanel siteNum() {
@@ -411,16 +446,29 @@ public class SiteInfoManagerApp extends JFrame {
    
    ActionListener input = new ActionListener() { // 엑셀 파일 가져오기
 	   
-	   Object[][] data = {
+	  /* Object[][] data = {
 				//HashSet<SiteInfo> data = new HashSet<SiteInfo>();
 				//data = {
 						//{"일반","☆", "사람만이","sarammani.com"},
 						//{"대학","", "덕성여자대학교","www.duksung.ac.kr" }
-				};
+				};*/
 	   @Override
-	   public void actionPerformed(ActionEvent e) {
+	   public void actionPerformed(ActionEvent args) {
+		   
+		   try {
+			   OutputStream output = new FileOutputStream("C:\\Users\\82105\\Desktop\\덕성\\2-2\\자바B.txt");
+			   String str = "안녕";
+			   byte[] by = str.getBytes();
+			   output.write(by);
+		   }
+		   catch (Exception e) {
+			   e.getStackTrace();
+		   }
+		   
+		   
+		   
 		 /*  // 파일을 만들 위치 및 파일명
-		   FileOutputStream fos = new FileOutputStream(new File("C://singgo.xls"));
+		   FileOutputStream fos = new FileOutputStream(new File("C://eunji.xls"));
 		   
 		   // 엑셀을 workbook을 만듭니다.
 		   HSSFWorkbook wb = new HSSFWorkbook();
@@ -455,9 +503,6 @@ public class SiteInfoManagerApp extends JFrame {
 		   }*/
 	   }
    };
-   
-   
-   
    
    ActionListener save = new ActionListener() { // 파일 - 저장
 
@@ -494,9 +539,7 @@ public class SiteInfoManagerApp extends JFrame {
 
 	      @Override
 	      public void actionPerformed(ActionEvent e) {
-	    	  //CategoryManageDialog category = new CategoryManageDialog();
-	    	  
-	         
+	    	  CategoryManageDialog category = new CategoryManageDialog();
 	      }
    };
    
@@ -504,17 +547,15 @@ public class SiteInfoManagerApp extends JFrame {
 
 		@Override
 		public void itemStateChanged(ItemEvent e) {
-			if (e.getStateChange() == ItemEvent.SELECTED);
-				//jt.setEnabled(true);
-			//else
-				//jt.setEnabled(false);
-			
+			if (e.getStateChange() == ItemEvent.SELECTED) { // 자동 로그인 체크하면
+				StartLogin startLogin = new StartLogin(); // 로그인창 다시뜨기
+			}
 			
 		}
 		
 	};
 	
-	ActionListener newin = new ActionListener() {
+	ActionListener newin = new ActionListener() { // 새로작성 버튼 이벤트
 		@Override
 	      public void actionPerformed(ActionEvent e) {
 					if (e.getActionCommand().equals("새로 작성(N)")) { // 새로작성 버튼 클릭하면
@@ -529,7 +570,7 @@ public class SiteInfoManagerApp extends JFrame {
 						dtm.addRow(s);
 						
 						//==== [start] 사이트 정보저장 ====
-							/*HashMap<String,String> mapInfo = new HashMap<String, String>();
+							HashMap<String,String> mapInfo = new HashMap<String, String>();
 							
 							mapInfo.put("siteTitle", siteTitle);
 							mapInfo.put("siteUrl", siteUrl);
@@ -538,7 +579,7 @@ public class SiteInfoManagerApp extends JFrame {
 							mapInfo.put("siteId", siteId);
 							mapInfo.put("sitePwd", sitePwd);
 							
-							siteInfoList.add(mapInfo);*/
+							siteInfoList.add(mapInfo);
 						//==== [END] 사이트 정보저장 ====
 							
 						
@@ -547,12 +588,15 @@ public class SiteInfoManagerApp extends JFrame {
 						idTF.setText("");
 						passTF.setText("");
 						
+						textA.setText("");
+						
 						sitenum.setText(dtm.getRowCount()+"개의 사이트가 등록되었습니다.");
+						
 					}
 					
-					//if(e.getSource().equals(dtm)) { // 표를 클릭하면
+					if(e.getSource().equals(table)) { // 표를 클릭하면
 						
-						/*HashMap<String, String> getThisMapInfo = siteInfoList.get(1);
+						HashMap<String, String> getThisMapInfo = siteInfoList.get(1);
 
 						siteTF.setText(getThisMapInfo.get("siteTitle"));
 						addrTF.setText(getThisMapInfo.get("siteUrl"));
@@ -562,8 +606,7 @@ public class SiteInfoManagerApp extends JFrame {
 						group1Combo.setSelectedItem(getThisMapInfo.get("siteFv"));
 						
 						
-						
-					}*/
+					}
 				
 					
 				}

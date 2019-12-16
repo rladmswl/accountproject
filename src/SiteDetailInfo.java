@@ -10,49 +10,35 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 public class SiteDetailInfo extends SiteInfo{
+	private String group;
+	private String prefer;
+	private String memo;
 	
-	private JPanel addInfoP;
+	SiteDetailInfo(String siteName, String url, String id, String pw, String group, String prefer, String memo) {
+		super(siteName, url, id, pw);
+		this.group = group;
+		this.prefer = prefer;
+		this.memo = memo;
+	}
 	
-	private String[] group1 = {"일반", "학교","정보","포털"};
-	private String[] group2 = {"미지정","☆", "☆☆","☆☆☆","☆☆☆☆","☆☆☆☆☆"};
-	   
-	private JComboBox<String> group1Combo;
-	private JComboBox<String> group2Combo;
+	String getGroup() {
+		return group;
+	}
+	String getPrefer() {
+		return prefer;
+	}
+	String getMemo() {
+		return memo;
+	}
 	
-	private JTextArea textA;
-	 
-    public JPanel SiteDetailInfo() {
-       //super();
-    
-       addInfoP = new JPanel();
-       addInfoP.setBorder(new TitledBorder(new LineBorder(Color.black, 1), "추가 정보"));
-       addInfoP.setLayout(new GridLayout(3,1));
-
-       //분류
-       JPanel groupP = new JPanel(new FlowLayout(FlowLayout.LEFT));
-       groupP.add(new JLabel("분류"));
-       group1Combo = new JComboBox<String>(group1);
-       groupP.add(group1Combo);
-       
-       //선호도
-       JPanel prefP = new JPanel(new FlowLayout(FlowLayout.LEFT));
-          prefP.add(new JLabel("선호도"));
-          group2Combo = new JComboBox<String>(group2);
-          prefP.add(group2Combo);
-
-          //메모
-          JPanel memoP = new JPanel(new FlowLayout(FlowLayout.LEFT));       
-          memoP.add(new JLabel("메모"));
-          textA = new JTextArea(7,15);
-          memoP.add(textA);
-     
-     
-       
-       addInfoP.add(groupP);
-       addInfoP.add(prefP);
-       addInfoP.add(memoP);
-       
-      return addInfoP;
-    }
+	void setGroup(String group) {
+		this.group = group;
+	}
+	void setPrefer(String prefer) {
+		this.prefer = prefer;
+	}
+	void setMemo(String memo) {
+		this.memo = memo;
+	}
 
 }

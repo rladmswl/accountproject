@@ -1,7 +1,7 @@
 
 public class Main {
 	StartLogin startLogin;
-	SiteInfo siteInfo;
+	//SiteInfo siteInfo;
 	
 	Main() {
 		
@@ -13,7 +13,7 @@ public class Main {
 	}
 	public void showSiteInfo() {
 		startLogin.dispose();
-		this.siteInfo = new SiteInfo();
+		//this.siteInfo = new SiteInfo();
 	}
 
 }

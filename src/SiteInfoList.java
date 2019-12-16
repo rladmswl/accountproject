@@ -2,9 +2,16 @@ import java.util.HashSet;
 
 public class SiteInfoList {
 
-	HashSet<SiteInfo> sites = new HashSet<SiteInfo>();
+	HashSet<SiteInfo> infos = new HashSet<SiteInfo>();
+	
+	public void add(SiteInfo data) {
+		infos.add(data);
+	}
+	public void delete(SiteInfo data) {
+		infos.remove(data);
+	}
 	
 	public HashSet<SiteInfo> getSiteInfo(){
-		return sites;
+		return infos;
 	}
 }
