@@ -6,6 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -31,8 +35,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -65,30 +67,11 @@ public class SiteInfoManagerApp extends JFrame {
    
    ArrayList<HashMap<String,String>> siteInfoList = new ArrayList<HashMap<String,String>>();
    
-  // String[] columNames = {"분류 ", "선호도", "사이트 이름","사이트 주소"};
-
-	//Object[][] data = {
-			//{"일반","☆", "사람만이","sarammani.com"},
-			//{"대학","", "덕성여자대학교","www.duksung.ac.kr" }
-	//};
-   
-	/*protected JPanel Dpanel;
-	protected SiteDetailInfo detail;
-	protected */
-	
-	
    protected JTable table;
-  // protected InfoTableModel model;
-  // protected DefaultTableModel dtm = new DefaultTableModel(data, columNames);
    protected DefaultTableModel dtm; // addRow를 호출하기 위한 선언
-  // JTextField idt = new JTextField(7);
-
-    //privateJTextField pass = new JTextField(7);
 
    SiteInfoList infoList = new SiteInfoList();
 
-   
-   
    SiteInfoManagerApp() {
       super("은지's 인터넷 계정관리");
       
@@ -100,18 +83,16 @@ public class SiteInfoManagerApp extends JFrame {
       
       setSize(900, 700);
       setLocation(600,200);
-      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      /*
       setDefaultCloseOperation(JFrame. DO_NOTHING_ON_CLOSE); // X버튼 눌러도 아무 동작 하지 않음
       addWindowListener(new WindowAdapter() {
            public void windowClosing(WindowEvent e) {
-              int result = JOptionPane.showConfirmDialog(SiteInfo.this, "정말 종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION);
+              int result = JOptionPane.showConfirmDialog(SiteInfoManagerApp.this, "정말 종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION);
                if (result == JOptionPane.YES_OPTION) {
                   System.exit(0);
                }
                else return;
            }
-      });*/
+      });
       setVisible(true);
      
        
@@ -141,7 +122,7 @@ public class SiteInfoManagerApp extends JFrame {
 		//i2.addActionListener(ouput);
 		i2.setEnabled(false);
 		i3.addActionListener(save);
-		//i4.addActionListener(logout);
+		i4.addActionListener(logout);
 		i5.addActionListener(exit);
 		
 		m1.add(i1);
@@ -171,9 +152,6 @@ public class SiteInfoManagerApp extends JFrame {
 		
 		m3.add(log);
 		m3.add(view);
-      
-      //createTitleBorder();
-      
       
    }
   
@@ -206,10 +184,7 @@ public class SiteInfoManagerApp extends JFrame {
       JPanel passP = new JPanel(new FlowLayout(FlowLayout.LEFT));
       passP.add(new JLabel("비밀번호", JLabel.LEFT));
       passTF = new JTextField(7);
-      //passTF.setEchoChar('*');
       passP.add(passTF);
-      
-      Changed();
      
       basicInfoP.add(siteP);
       basicInfoP.add(addrP);
@@ -248,14 +223,6 @@ public class SiteInfoManagerApp extends JFrame {
          addText.add(groupP);
          addText.add(prefP);
          addField.add(memoP);
-      
-    // return addInfoP;
-      
-      /*
-      detail = new SiteDetailInfo();
-      addInfoP.add(detail);
-      Dpanel = new JPanle(comp);*/
-      //SiteDetailInfo();
       
       //새로작성, 입력 버튼
       btnP = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -316,12 +283,10 @@ public class SiteInfoManagerApp extends JFrame {
 
       //정렬
       JPanel arrayP = new JPanel();
-      //arrayP.setLayout(new BorderLayout());
       arrayP.setBorder(new TitledBorder(new LineBorder(Color.black,1),"정렬")); // 테두리
      
       JPanel arrayPanel = new JPanel();
       arrayP.add(arrayPanel, BorderLayout.SOUTH);
-      //arrayP.add(arrayPanel);
       
       group4Combo = new JComboBox<String>(group4);
       group5Combo = new JComboBox<String>(group4);
@@ -348,7 +313,6 @@ public class SiteInfoManagerApp extends JFrame {
       tablePanel.setLayout(new BorderLayout());
       tabPanel.add(tablePanel, BorderLayout.CENTER);
 		
-	//model = new InfoTableModel();
       dtm = new DefaultTableModel();
       dtm.setColumnIdentifiers(new String[] {"분류 ", "선호도", "사이트 이름","사이트 주소"});
 		table = new JTable(dtm);
@@ -357,7 +321,6 @@ public class SiteInfoManagerApp extends JFrame {
 		table.setAutoCreateRowSorter(true); // 자동 행 정렬
 		
 		tablePanel.add(new JScrollPane(table));
-		//tableRow(); // 표 행
       
       //계정정보
      JPanel viewPanel = new JPanel(new BorderLayout()); // 계정정보 보기 패널
@@ -385,54 +348,8 @@ public class SiteInfoManagerApp extends JFrame {
       return pane;
    }
    
-   // 표 행 클릭했을때
-  /* private void tableRow() {
-	   table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-		   public void valueChanged(ListSelectionEvent e) {
-			   	Vector<SiteInfo> list = new Vector<SiteInfo>();
-   				list.addAll(infoList.getSiteInfo());
-   			
-	   			int row = table.getSelectedRow(); // 선택 된 열 알아내기
-	   			SiteInfo s = list.get(row); //오류ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
-	   			
-	   			siteTF.setText(s.getSiteName());
-	   			addrTF.setText(s.getUrl());
-	   			idTF.setText(s.getId());
-	   			passTF.setText(s.getPw());
-			   
-			   int Row = table.getSelectedRow(); // 선택 된 열 알아내기
-			   siteTF = table.getValueAt((Row, 2));
-	   			addrTF.setText();
-	   			idTF.setText();
-	   			passTF.setText();
-	   			
-	   		 // 분류콤보
-	   			String s1 = ((SiteDetailInfo)s).getGroup();
-	   			int index1 = 0;
-	   			for ( int i1 = 0; i1<group1.length; i1++) {
-	   				if(group1[i1].equals(s1)) {
-	   					index1 = i1;
-	   				}
-	   			}
-	   			group1Combo.setSelectedIndex(index1);
-	   			
-	   		 // 선호도콤보
-	   			String s2 = ((SiteDetailInfo)s).getPrefer();
-	   			int index2 = 0;
-	   			for ( int i2 = 0; i2<group2.length; i2++) {
-	   				if(group1[i2].equals(s2)) {
-	   					index2 = i2;
-	   				}
-	   			}
-	   			group2Combo.setSelectedIndex(index2);
-	   			
-	   			textA.setText(((SiteDetailInfo)s).getMemo());
-		   }
-	   });
-	   
-   }*/
    
-   // 사이트 개수 나타내기
+   // 사이트 개수 나타내는 패널
    private JPanel siteNum() {
 	   JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 	   this.add(p, BorderLayout.SOUTH);
@@ -446,27 +363,9 @@ public class SiteInfoManagerApp extends JFrame {
    
    ActionListener input = new ActionListener() { // 엑셀 파일 가져오기
 	   
-	  /* Object[][] data = {
-				//HashSet<SiteInfo> data = new HashSet<SiteInfo>();
-				//data = {
-						//{"일반","☆", "사람만이","sarammani.com"},
-						//{"대학","", "덕성여자대학교","www.duksung.ac.kr" }
-				};*/
 	   @Override
 	   public void actionPerformed(ActionEvent args) {
-		   
-		   try {
-			   OutputStream output = new FileOutputStream("C:\\Users\\82105\\Desktop\\덕성\\2-2\\자바B.txt");
-			   String str = "안녕";
-			   byte[] by = str.getBytes();
-			   output.write(by);
-		   }
-		   catch (Exception e) {
-			   e.getStackTrace();
-		   }
-		   
-		   
-		   
+		  
 		 /*  // 파일을 만들 위치 및 파일명
 		   FileOutputStream fos = new FileOutputStream(new File("C://eunji.xls"));
 		   
@@ -535,6 +434,15 @@ public class SiteInfoManagerApp extends JFrame {
       }
    };
    
+   ActionListener logout = new ActionListener() { // 파일 - 로그아웃
+
+	      @Override
+	      public void actionPerformed(ActionEvent e) {
+	    	  StartLogin startLogin = new StartLogin(); // 다시 로그인
+	         
+	      }
+	   };
+   
    ActionListener site = new ActionListener() { // 관리 - 사이트 분류
 
 	      @Override
@@ -566,6 +474,7 @@ public class SiteInfoManagerApp extends JFrame {
 						String siteFv = group2Combo.getSelectedItem().toString();
 						String siteId = idTF.getText().toString();
 						String sitePwd = passTF.getText().toString();
+						String siteMemo = textA.getText().toString();
 						String[] s = {siteKind,siteFv,siteTitle,siteUrl};
 						dtm.addRow(s);
 						
@@ -578,6 +487,7 @@ public class SiteInfoManagerApp extends JFrame {
 							mapInfo.put("siteFv", siteFv);
 							mapInfo.put("siteId", siteId);
 							mapInfo.put("sitePwd", sitePwd);
+							mapInfo.put("siteMemo",siteMemo);
 							
 							siteInfoList.add(mapInfo);
 						//==== [END] 사이트 정보저장 ====
@@ -592,38 +502,37 @@ public class SiteInfoManagerApp extends JFrame {
 						
 						sitenum.setText(dtm.getRowCount()+"개의 사이트가 등록되었습니다.");
 						
-					}
-					
-					if(e.getSource().equals(table)) { // 표를 클릭하면
-						
-						HashMap<String, String> getThisMapInfo = siteInfoList.get(1);
+						// 표 클릭했을때
+						   table.addMouseListener(new MouseAdapter() {
 
-						siteTF.setText(getThisMapInfo.get("siteTitle"));
-						addrTF.setText(getThisMapInfo.get("siteUrl"));
-						idTF.setText(getThisMapInfo.get("siteId"));
-						passTF.setText(getThisMapInfo.get("sitePwd"));
-						group1Combo.setSelectedItem(getThisMapInfo.get("siteKind"));
-						group1Combo.setSelectedItem(getThisMapInfo.get("siteFv"));
+								@Override
+
+								public void mouseClicked(MouseEvent e) {
+
+									int row = table.getSelectedRow();
+									HashMap<String, String> getThisMapInfo = siteInfoList.get(row);
+			
+									siteTF.setText(getThisMapInfo.get("siteTitle"));
+									addrTF.setText(getThisMapInfo.get("siteUrl"));
+									//idTF.setText(getThisMapInfo.get("siteId"));
+									//passTF.setText(getThisMapInfo.get("sitePwd"));
+									group1Combo.setSelectedItem(getThisMapInfo.get("siteKind"));
+									group2Combo.setSelectedItem(getThisMapInfo.get("siteFv"));
+									textA.setText(getThisMapInfo.get("siteMemo"));
 						
-						
+									//btn2.setEnabled(true);
+									
+									
+								}
+						   });
 					}
-				
-					
 				}
 				
 	};
-	
-	
-	
-	
-	private void Changed() {
-		if (passTF.getText().length() > 0)
-			btn1.setEnabled(true);
-	}
    
    public static void main(String[] args) {
       new SiteInfoManagerApp();
-      StartLogin startLogin = new StartLogin();
+      StartLogin startLogin = new StartLogin(); // 프로그램 실행하면 로그인창 뜨기
    }
 
 } 
